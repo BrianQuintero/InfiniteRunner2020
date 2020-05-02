@@ -6,7 +6,7 @@ class Play extends Phaser.Scene{
         //sprite creation
         this.load.image('surface', './assets/moon.png');
         this.load.image('ball', './assets/ball.png');
-        //this.load.image('obstacleTest', './assets/obstacleTest.png');
+        this.load.image('obstacleTest', './assets/obstacleTest.png');
         this.load.image('collectibleTest', './assets/collectibleTest.png');
         this.load.image('asteroid', './assets/asteroid.png');
         //audio
@@ -52,23 +52,29 @@ class Play extends Phaser.Scene{
         //object updates for gamestate
         if(!this.gameOver){
             this.timer++;
-            /*if(this.staticObstacle.y >= game.config.height){
-                this.staticObstacle.destroy();
-            }*/
+            //static obstacle creation
             if(this.timer % (300 / Play.level) == 0){
                 var meteor = this.obstacles.create((Math.random() * (game.config.width - 0) + 0), 0, 'asteroid');
                 meteor.setVelocityY(100 * Play.level);
                 //this.staticObstacle = new StaticObstacle(this, (Math.random() * (game.config.width - 0) + 0), 0, 'asteroid');
             }
+            //alien obstacle creation
+            /*if(Play.level >= 2 && (550 % Play.level) == 0){
+                console.log("alien spawn");
+                var alien = this.obstacles.create(0, (Math.random() * (game.config.width - 0) + 0), 'obstacleTest');
+                //
+                this.alienY = alien.y;
+                alien.setVelocityX(100);
+                alien.setVelocityY(this.alienY + (20 * Math.sin(this.x/100)));
+            }*/
+            //Level increase over time
             if(this.timer % 1500 == 0){
                 console.log("level up!");
                 Play.level++;
             }
             //spawn collectible
             if(this.timer % 750 == 0){
-                console.log("reached threshold");
                 if((Math.random() * (1 + 3) + 1) >= 2){
-                    console.log("lucky you!");
                     this.collectible = new Collectible(this, (Math.random() * (game.config.width - 0) + 0), 0, 'collectibleTest');
                 }
             }
