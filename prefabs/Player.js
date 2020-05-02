@@ -5,10 +5,10 @@ class Player extends Phaser.Physics.Arcade.Sprite{
         scene.physics.add.existing(this);
     }
     update(){
-        if(keyLEFT.isDown){
+        if(keyLEFT.isDown && this.x >= 96){
             this.x -= 4;
         }
-        else if(keyRIGHT.isDown){
+        else if(keyRIGHT.isDown && this.x <= 500){
             this.x += 4;
         }
         if(keyUP.isDown){

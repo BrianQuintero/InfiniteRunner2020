@@ -73,7 +73,7 @@ class Play extends Phaser.Scene{
                 }
             }
             //updates
-            this.surface.tilePositionY -= 10;
+            this.surface.tilePositionY -= 10 + Play.level;
             this.player.update();
             this.staticObstacle.update();
             this.collectible.update();
