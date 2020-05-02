@@ -6,7 +6,7 @@ class Play extends Phaser.Scene{
         //sprite creation
         this.load.image('surface', './assets/moon.png');
         this.load.image('ball', './assets/ball.png');
-        this.load.image('obstacleTest', './assets/obstacleTest.png');
+        //this.load.image('obstacleTest', './assets/obstacleTest.png');
         this.load.image('collectibleTest', './assets/collectibleTest.png');
         this.load.image('asteroid', './assets/asteroid.png');
         //audio
