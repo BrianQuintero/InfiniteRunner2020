@@ -8,12 +8,14 @@ class Play extends Phaser.Scene{
         this.load.image('ball', './assets/ball.png');
         this.load.image('obstacleTest', './assets/obstacleTest.png');
         this.load.image('collectibleTest', './assets/collectibleTest.png');
-        this.load.image('asteroid', './assets/asteroid.png');
+        //this.load.image('asteroid', './assets/asteroid.png');
         //audio
         this.load.audio('coinGet', './assets/coinGet.wav');
         this.load.audio('loseGame', './assets/loseGame.wav');
         //Animation Atlas
         this.load.atlas('ufo','./assets/ufo.png', './assets/ufo.json');
+        this.load.atlas('asteroid', './assets/asteroid.png', './assets/asteroid.json');
+        this.load.atlas('star', './assets/star.png', './assets/star.json');
     }
     create(){
         //creation of background
@@ -21,15 +23,15 @@ class Play extends Phaser.Scene{
         this.timer = 0;
         this.coins = 0;
         this.surface = this.add.tileSprite(0,0,640,480,'surface').setOrigin(0,0);
-        /*this.anims.create({
-            key: 'ufoStill',
-            frames: this.anims.generateFrameNames('ufo', {
+        this.anims.create({
+            key: 'asteroidStill',
+            frames: this.anims.generateFrameNames('asteroid', {
                 prefix: 'sprite',
-                end: 10
+                end: 3
             }),
             frameRate: 8,
             repeat: -1
-        });*/
+        });
         //player creation
         this.player = new Player(this, game.config.width/2,431,'ball');
         //obstacle creation
@@ -53,7 +55,7 @@ class Play extends Phaser.Scene{
         this.timeScore = this.add.text(100, 54, 'Score: 0', {backgroundColor: '#000000'});
         //this.scoreBox = this.add.text();
         //collision creation for collectible
-        this.collectible = new Collectible(this, 1000, 0, 'collectibleTest');
+        this.collectible = new Collectible(this, 1000, 0, 'star');
         //initial game conditions
         this.gameOver = false;
         //collision detection for obstacles and powerups (yes, I know this is a mess)
@@ -90,11 +92,16 @@ class Play extends Phaser.Scene{
             this.timeScore.text = 'Score: ' + this.timer;
             //static obstacle creation
             if(this.timer % (150 / Play.level) == 0){
-                var meteor = this.obstacles.create((Math.random() * (450 - 60) + 60), 0, 'asteroid');
-                meteor.setVelocityY(100 * Play.level);
+                //var meteor = this.obstacles.create((Math.random() * (450 - 60) + 60), 0, 'asteroid');
+                this.meteor = this.physics.add.sprite((Math.random() * (450 - 60) + 60), 0, 'asteroid');
+                this.meteor.anims.play('asteroidStill');
+                this.physics.add.collider(this.player, this.meteor, this.collisionObstacle, null, this);
+                this.physics.add.collider(this.meteor, this.player, this.collisionObstacle, null, this);
+                this.physics.add.overlap(this.player, this.meteor, this.collisionObstacle, null, this);
+                this.meteor.setVelocityY(100 * Play.level);
             }
             //alien obstacle creation
-            if(Play.level >= 2 && this.timer % (600 / Play.level) == 0){
+            if(Play.level >= 2 && this.timer % 900 == 0){
                 this.AlienShip = new SineShip(this, game.config.width, (Math.random() * (game.config.height - 0) + 0), 'ufo');
                 //this.alienSprite = this.physics.add.sprite(60, 60, 'ufo');
                 //this.alienSprite.play('ufoStill');
@@ -110,7 +117,7 @@ class Play extends Phaser.Scene{
             //spawn collectible
             if(this.timer % 737 == 0){
                 if((Math.random() * (1 + 3) + 1) >= 2){
-                    this.collectible = new Collectible(this, (Math.random() * (game.config.width - 0) + 0), 0, 'collectibleTest');
+                    this.collectible = new Collectible(this, (Math.random() * (450 - 60) + 60), 0, 'star');
                 }
             }
             //updates
