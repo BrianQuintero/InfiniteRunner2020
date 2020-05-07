@@ -11,9 +11,10 @@ class Play extends Phaser.Scene{
         this.load.image('bannerUI', './assets/bannerUI.png');
         //this.load.image('asteroid', './assets/asteroid.png');
         //audio
-        this.load.audio('coinGet', './assets/coinGet.wav');
+        this.load.audio('collect', './assets/collect.wav');
         this.load.audio('loseGame', './assets/loseGame.wav');
         this.load.audio('bgm', './assets/BGM.wav');
+        this.load.audio('hitGolf', './assets/Hit2.wav');
         //Animation Atlas
         this.load.atlas('ufo','./assets/ufo.png', './assets/ufo.json');
         this.load.atlas('asteroid', './assets/asteroid.png', './assets/asteroid.json');
@@ -172,6 +173,6 @@ class Play extends Phaser.Scene{
         this.collectible.destroy();
         this.coins++;
         this.coinCount.text = 'Stars: ' + this.coins
-        this.sound.play('coinGet');
+        this.sound.play('collect');
     }
 }
