@@ -19,6 +19,9 @@ class GameOver extends Phaser.Scene{
         //add sprite
         this.loseGame = this.add.sprite(0,0,'gameOverScreen').setOrigin(0,0);
         this.loseGame.play('gameOverAnim');
+        this.add.text(10, 10, 'Survial Points: ' + Play.timer);
+        this.add.text(10, 30, 'Star Points: ' + (Play.stars * 250));
+        this.add.text(10, 50, 'Total Score: ' + (Play.timer + (Play.stars * 250)));
         //key implementations
         keyRIGHT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT);
         keyLEFT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT);

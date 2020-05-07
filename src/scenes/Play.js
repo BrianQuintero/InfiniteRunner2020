@@ -25,8 +25,8 @@ class Play extends Phaser.Scene{
     create(){
         //creation of background
         Play.level = 1;
-        this.timer = 0;
-        this.coins = 0;
+        Play.timer = 0;
+        Play.stars = 0;
         this.surface = this.add.tileSprite(0,0,640,480,'surface').setOrigin(0,0);
         this.UI = this.add.sprite(0,0,'bannerUI').setOrigin(0,0);
         this.UI.depth = 10;
@@ -112,14 +112,14 @@ class Play extends Phaser.Scene{
         }
         //object updates for gamestate
         if(!this.gameOver && this.ballHit){
-            this.timer++;
-            this.timeScore.text = 'Score: ' + this.timer;
+            Play.timer++;
+            this.timeScore.text = 'Score: ' + Play.timer;
             this.astroGolfer.y += 4;
             if(this.astroGolfer.y >= game.config.height){
                 this.astroGolfer.destroy();
             }
             //static obstacle creation
-            if(this.timer % (150 / Play.level) == 0){
+            if(Play.timer % (150 / Play.level) == 0){
                 //var meteor = this.obstacles.create((Math.random() * (450 - 60) + 60), 0, 'asteroid');
                 this.meteor = this.physics.add.sprite((Math.random() * (450 - 60) + 60), 0, 'asteroid');
                 this.meteor.anims.play('asteroidStill');
@@ -129,7 +129,7 @@ class Play extends Phaser.Scene{
                 this.meteor.setVelocityY(100 * Play.level);
             }
             //alien obstacle creation
-            if(Play.level >= 2 && this.timer % 900 == 0){
+            if(Play.level >= 2 && Play.timer % 900 == 0){
                 this.AlienShip = new SineShip(this, game.config.width, (Math.random() * (game.config.height - 0) + 0), 'ufo');
                 //this.alienSprite = this.physics.add.sprite(60, 60, 'ufo');
                 //this.alienSprite.play('ufoStill');
@@ -139,11 +139,11 @@ class Play extends Phaser.Scene{
                 //this.alienSprite.setVelocityX(250);
             }
             //Level increase over time
-            if(this.timer % 1500 == 0){
+            if(Play.timer % 1500 == 0){
                 Play.level++;;
             }
             //spawn collectible
-            if(this.timer % 737 == 0){
+            if(Play.timer % 737 == 0){
                 if((Math.random() * (1 + 3) + 1) >= 2){
                     this.collectible = new Collectible(this, (Math.random() * (450 - 60) + 60), 0, 'star');
                 }
@@ -171,8 +171,8 @@ class Play extends Phaser.Scene{
     }
     collisionCollectable(){
         this.collectible.destroy();
-        this.coins++;
-        this.coinCount.text = 'Stars: ' + this.coins
+        Play.stars++;
+        this.coinCount.text = ('Stars: ' + Play.stars);
         this.sound.play('collect');
     }
 }
