@@ -12,7 +12,7 @@ class Play extends Phaser.Scene{
         //this.load.image('asteroid', './assets/asteroid.png');
         //audio
         this.load.audio('collect', './assets/collect.wav');
-        this.load.audio('loseGame', './assets/loseGame.wav');
+        this.load.audio('loseGame', './assets/Crash.wav');
         this.load.audio('bgm', './assets/BGM.wav');
         this.load.audio('hitGolf', './assets/Hit2.wav');
         //Animation Atlas
