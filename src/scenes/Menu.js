@@ -18,7 +18,7 @@ class Menu extends Phaser.Scene{
             repeat: -1
         });
         //add sprite
-        this.title = this.add.sprite(0,0,640,480,'titleScreen').setOrigin(0,0);
+        this.title = this.add.sprite(0,0,'titleScreen').setOrigin(0,0);
         this.title.play('titleScreenAnim');
         //key implementations
         keyRIGHT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT);
@@ -30,7 +30,6 @@ class Menu extends Phaser.Scene{
     }
     update(){
         if(Phaser.Input.Keyboard.JustDown(keySPACE)){
-            console.log("key pressed");
             this.scene.start("playScene");
         }
     }
