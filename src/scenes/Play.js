@@ -8,6 +8,7 @@ class Play extends Phaser.Scene{
         this.load.image('ball', './assets/ball.png');
         this.load.image('obstacleTest', './assets/obstacleTest.png');
         this.load.image('collectibleTest', './assets/collectibleTest.png');
+        this.load.image('bannerUI', './assets/bannerUI.png');
         //this.load.image('asteroid', './assets/asteroid.png');
         //audio
         this.load.audio('coinGet', './assets/coinGet.wav');
@@ -17,6 +18,8 @@ class Play extends Phaser.Scene{
         this.load.atlas('ufo','./assets/ufo.png', './assets/ufo.json');
         this.load.atlas('asteroid', './assets/asteroid.png', './assets/asteroid.json');
         this.load.atlas('star', './assets/star.png', './assets/star.json');
+        this.load.atlas('golfball', './assets/golfBall.png', './assets/golfBall.json');
+        this.load.atlas('astroGolf', './assets/astroGolf.png','./assets/astroGolf.json');
     }
     create(){
         //creation of background
@@ -24,6 +27,9 @@ class Play extends Phaser.Scene{
         this.timer = 0;
         this.coins = 0;
         this.surface = this.add.tileSprite(0,0,640,480,'surface').setOrigin(0,0);
+        this.UI = this.add.sprite(0,0,'bannerUI').setOrigin(0,0);
+        this.UI.depth = 10;
+        this.ballHit = false;
         //asteroid animations
         this.anims.create({
             key: 'asteroidStill',
@@ -34,8 +40,20 @@ class Play extends Phaser.Scene{
             frameRate: 8,
             repeat: -1
         });
+        //astronaut animation
+        this.anims.create({
+            key: 'golferAnim',
+            frames: this.anims.generateFrameNames('astroGolf', {
+                prefix: 'sprite',
+                end: 22
+            }),
+            frameRate: 8,
+            repeat: -1
+        });
+        this.astroGolfer = this.add.sprite((game.config.width / 2) - 30, game.config.height - 50, 'astroGolf');
+        this.astroGolfer.anims.play('golferAnim');
         //player creation
-        this.player = new Player(this, game.config.width/2,431,'ball');
+        this.player = new Player(this, 1000,1000,'golfball').setScale(0, 0);
         //obstacle creation
         this.obstacles = this.physics.add.group();
         //this.staticObstacle = new StaticObstacle(this, game.config.width/2,0,'asteroid');
@@ -48,7 +66,8 @@ class Play extends Phaser.Scene{
             loop:true
         });
         //Creation of Score and Coin Text Boxes
-        this.timeScore = this.add.text(100, 54, 'Score: 0', {backgroundColor: '#000000'});
+        this.timeScore = this.add.text(100, 25, 'Score: 0', {backgroundColor: '#000000'});
+        this.timeScore.depth = 11;
         //this.scoreBox = this.add.text();
         //collision creation for collectible
         this.collectible = new Collectible(this, 1000, 0, 'star');
@@ -57,6 +76,15 @@ class Play extends Phaser.Scene{
         if(!this.gameOver){
             this.bgm.play();
         }
+        //clock for starting
+        this.clock = this.time.delayedCall(1978, () => {
+            this.ballHit = true;
+            this.player.x = game.config.width/2;
+            this.player.y = 431;
+            this.player.setScale(0.05, 0.05);
+            this.player.setScale(0.1,0.1);
+            this.player.setScale(0.2,0.2);
+        },null, this);
         //collision detection for obstacles and powerups (yes, I know this is a mess)
         this.physics.add.collider(this.player, this.obstacles, this.collisionObstacle, null, this);
         this.physics.add.collider(this.obstacles, this.player, this.collisionObstacle, null, this);
@@ -73,7 +101,8 @@ class Play extends Phaser.Scene{
         keyUP = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP);
         keyDOWN = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.DOWN);
         keyR = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.R);
-        this.coinCount = this.add.text(500, 54, 'Coins: 0', {backgroundColor: '#000000'});
+        this.coinCount = this.add.text(500, 25, 'Stars: 0', {backgroundColor: '#000000'});
+        this.coinCount.depth = 11;
     }
     update(){
         //tileset creation
@@ -81,9 +110,13 @@ class Play extends Phaser.Scene{
             this.scene.restart();
         }
         //object updates for gamestate
-        if(!this.gameOver){
+        if(!this.gameOver && this.ballHit){
             this.timer++;
             this.timeScore.text = 'Score: ' + this.timer;
+            this.astroGolfer.y += 4;
+            if(this.astroGolfer.y >= game.config.height){
+                this.astroGolfer.destroy();
+            }
             //static obstacle creation
             if(this.timer % (150 / Play.level) == 0){
                 //var meteor = this.obstacles.create((Math.random() * (450 - 60) + 60), 0, 'asteroid');
@@ -138,7 +171,7 @@ class Play extends Phaser.Scene{
     collisionCollectable(){
         this.collectible.destroy();
         this.coins++;
-        this.coinCount.text = 'Coins: ' + this.coins
+        this.coinCount.text = 'Stars: ' + this.coins
         this.sound.play('coinGet');
     }
 }
